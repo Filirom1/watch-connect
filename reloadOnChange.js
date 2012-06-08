@@ -16,7 +16,7 @@ var fs = require('fs'),
   connect = require('connect'),
   mustache = require('mustache'),
   _ = require('underscore'),
-  watch = require('watch').watchTree,
+  watch = require('directory-tree-watcher'),
   mime = connect.static.mime,
   sockets = {},
   // one time-hit, get the file content of the socket.io client side script
