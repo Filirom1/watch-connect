@@ -1,6 +1,6 @@
 // # reloadOnChange
 //
-// this one will use raw connect middleware application with socket.io 
+// this one will use raw connect middleware application with socket.io
 // connection setup.
 //
 // It works by injecting a tiny client-side script on any `*.html` request (might be better
@@ -79,6 +79,12 @@ module.exports = function(dirToWatch, server, options){
       ioResponse = ioScript({});
       res.setHeader('Content-Length', ioResponse.length);
       return res.end(ioResponse);
+    }
+
+    // skip adding assumes socket.js scripts have been hand
+    // added to resulting template
+    if (options.skipAdding) {
+      return next();
     }
 
     fs.stat(filepath, function(e, stat) {
