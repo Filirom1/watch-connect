@@ -16,8 +16,8 @@ var fs = require('fs'),
   connect = require('connect'),
   mustache = require('mustache'),
   _ = require('underscore'),
-  watch = require('directory-tree-watcher'),
   mime = connect.static.mime,
+  watchTree = require("fs-watch-tree").watchTree,
   sockets = {},
   // one time-hit, get the file content of the socket.io client side script
   ioScript = (function() {
@@ -33,7 +33,13 @@ var fs = require('fs'),
 module.exports = function(dirToWatch, server, options){
   options = options || {};
   if(!fs.statSync(dirToWatch)) return console.error('Unable to watch ' + dirToWatch, err.message);
-  watch(dirToWatch, _.debounce(emit.bind(this, options), 100));
+
+  watchTree(dirToWatch, function (event) {
+    if (options.verbose) {
+      console.log("File named: " + event.name + "has changed");
+    }
+    emit(options);
+  });
 
   // setup socketio
   var io = socketio.listen(server);
