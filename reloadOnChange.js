@@ -34,7 +34,7 @@ module.exports = function(dirToWatch, server, options){
   options = options || {};
   if(!fs.statSync(dirToWatch)) return console.error('Unable to watch ' + dirToWatch, err.message);
 
-  watchTree(dirToWatch, function (event) {
+  watchTree(dirToWatch, { exclude: [".git", "node_modules", ".hg"] }, function (event) {
     if (options.verbose) {
       console.log("File named: " + event.name + "has changed");
     }
