@@ -13,8 +13,6 @@ var fs = require('fs'),
   url = require('url'),
   socketio = require('socket.io'),
   logio = new (require('socket.io/lib/logger'))(),
-  connect = require('connect'),
-  _ = require('underscore'),
   watchTree = require("fs-watch-tree").watchTree,
   sockets = {},
   // one time-hit, get the file content of the socket.io client side script
@@ -116,7 +114,7 @@ module.exports = function(dirToWatch, server, options){
 // basic reload tasks, works in tandem with serve task
 function emit(options){
   if(options.verbose) console.log('[watch-connect]', 'Changes detected');
-  if(options.verbose && _.isEmpty(sockets)) return console.error('[watch-connect]', 'No client connected to socket.io');
+  if(options.verbose && !Object.keys(sockets)) return console.error('[watch-connect]', 'No client connected to socket.io');
   Object.keys(sockets).forEach(function(s) {
     if(options.verbose) console.log('[watch-connect]', 'reload clients');
     sockets[s].emit('changed');
