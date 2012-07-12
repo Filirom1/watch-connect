@@ -15,5 +15,8 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
+  },
+  "devDependencies": {
+    "connect": "~1.9.2"
   }
 }
