@@ -18,11 +18,16 @@ var fs = require('fs'),
   // one time-hit, get the file content of the socket.io client side script
   ioScript = fs.readFileSync(path.join(__dirname, './util/socket-enable.js'), 'utf8');
 
-module.exports = function(dirToWatch, server, options){
-  options = options || {};
-  if(!fs.statSync(dirToWatch)) return console.error('[watch-connect]', 'Unable to watch ' + dirToWatch, err.message);
+// Possible options are :
+// * watchdir: path to the directory to watch (required)
+// * server: http server to hook our reload (required)
+// * basedir: path to the base directory of our served files (optional)
+// * verbose: be verbose or not (default=false)
+module.exports = function(options){
+  if(!options || !options.watchdir || !options.server) return console.error('[watch-connect]', 'Options missing');
+  if(!fs.statSync(options.watchdir)) return console.error('[watch-connect]', 'Unable to watch ' + options.watchdir, err.message);
 
-  watchTree(dirToWatch, { exclude: [".git", "node_modules", ".hg"] }, function (event) {
+  watchTree(options.watchdir, { exclude: [".git", "node_modules", ".hg"] }, function (event) {
     if (options.verbose) {
       console.log('[watch-connect]', "File named: " + event.name + " has changed");
     }
@@ -30,7 +35,7 @@ module.exports = function(dirToWatch, server, options){
   });
 
   // setup socketio
-  var io = socketio.listen(server);
+  var io = socketio.listen(options.server);
   io.enable('browser client minification');
   io.enable('browser client etag');
   io.enable('browser client gzip');
@@ -52,7 +57,7 @@ module.exports = function(dirToWatch, server, options){
     var parsed = url.parse(req.url),
 
       // join / normalize from root dir
-      filepath = path.normalize(path.join(dirToWatch, decodeURIComponent(parsed.pathname))),
+      filepath = path.normalize(path.join(options.basedir || options.watchdir, decodeURIComponent(parsed.pathname))),
 
       // index.html support when trainling `/`
       index = path.normalize('/') === filepath.charAt(filepath.length - 1);
@@ -69,7 +74,7 @@ module.exports = function(dirToWatch, server, options){
 
     // skip adding assumes socket.js scripts have been hand
     // added to resulting template
-    if (options.skipAdding) return next(); 
+    if (options.skipAdding) return next();
 
     // skip non html files
     if (path.extname(filepath) != '.html') return next();
