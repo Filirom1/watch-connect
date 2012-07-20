@@ -32,6 +32,7 @@ Oh look the browser was updated :)
 
  * verbose: Defaults to false.  Chatty logging.
  * skipAdding: Defaults to false.  When set to true, the socket scripts will not be added to .html pages on their way through the middleware.  The assumption is that you would add them to your page(s) yourself.  This serves as a workaround for those who are not rendering .html pages directly, like express users who may be using jade templates.
+ * exclude: an array of files that when changed should not cause a reload
 
 ## License
 
