@@ -13,7 +13,7 @@ var fs = require('fs'),
   url = require('url'),
   socketio = require('socket.io'),
   logio = new (require('socket.io/lib/logger'))(),
-  watchTree = require("fs-watch-tree").watchTree,
+  watchTree = require("chokidar"),
   sockets = {},
   // one time-hit, get the file content of the socket.io client side script
   ioScript = fs.readFileSync(path.join(__dirname, './util/socket-enable.js'), 'utf8');
@@ -23,16 +23,26 @@ var fs = require('fs'),
 // * server: http server to hook our reload (required)
 // * basedir: path to the base directory of our served files (optional)
 // * verbose: be verbose or not (default=false)
+// * skipAdding: don't add socket io scripts, already been hand added/used
+// * exclude: files to exclude from watch, so therefore they will not force refresh of page
 module.exports = function(options){
   if(!options || !options.watchdir || !options.server) return console.error('[watch-connect]', 'Options missing');
   if(!fs.statSync(options.watchdir)) return console.error('[watch-connect]', 'Unable to watch ' + options.watchdir, err.message);
 
-  watchTree(options.watchdir, { exclude: [".git", "node_modules", ".hg"] }, function (event) {
-    if (options.verbose) {
-      console.log('[watch-connect]', "File named: " + event.name + " has changed");
+  var exclude = [".git", "node_modules", ".hg"];
+  if (options.exclude) {
+    exclude = exclude.concat(options.exclude);
+  }
+
+  var watcher = watchTree.watch(options.watchdir, {persistent: true});
+  watcher.on('all', function(type, itemPath) {
+    ignore = exclude.some(function(ele){
+      return itemPath.match(ele);
+    })
+    if (!ignore) {
+      emit(options);
     }
-    emit(options);
-  });
+  })
 
   // setup socketio
   var io = socketio.listen(options.server);
