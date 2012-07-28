@@ -10,7 +10,7 @@
   "main": "reloadOnChange.js",
   "dependencies": {
     "socket.io": "~0.9.6",
-    "fs-watch-tree": "~0.2.1"
+    "chokidar": "~0.4.0"
   },
   "optionalDependencies": {},
   "engines": {
