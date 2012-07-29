@@ -5,7 +5,7 @@ var Path = require('path'),
 var path = Path.resolve(__dirname, 'fixture');
 
 var server = connect();
-server.use(reloadOnChange(path, server, {verbose: true}));
+server.use(reloadOnChange({ watchdir: path, server: server, verbose: true}));
 server.use(connect.static(path));
 
 server.listen(3000, function(){
