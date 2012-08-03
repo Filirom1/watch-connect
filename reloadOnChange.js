@@ -37,7 +37,7 @@ module.exports = function(options){
   var watcher = watchTree.watch(options.watchdir, {persistent: true});
   watcher.on('all', function(type, itemPath) {
     ignore = exclude.some(function(ele){
-      return itemPath.match(ele);
+      return itemPath.indexOf(ele) >= 0
     })
     if (!ignore) {
       emit(options);
