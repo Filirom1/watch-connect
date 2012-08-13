@@ -4,7 +4,7 @@ A connect/express middleware that force browsers to reload when the server detec
 
 The watch mode has been borrowed from [https://github.com/mklabs/mockerie](mockerie) by the genious [mklabs](https://github.com/mklabs).
 
-## Usage
+## Usage With Connect
 
     var Path = require('path'),
       connect = require('connect'),
@@ -28,6 +28,9 @@ Look at the title color.
 Now change the color in `example/fixture/sub/folder/file.css`, and save your changes.
 
 Oh look the browser was updated :)
+
+## Usage With Express
+
 
 ## Options
 

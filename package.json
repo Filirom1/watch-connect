@@ -1,7 +1,7 @@
 {
   "author": "Filirom1 <filirom1@gmail.com>",
   "name": "watch-connect",
-  "description": "A connect middleware that force browsers to reload when the server detects file changes.",
+  "description": "A connect/express middleware that force browsers to reload when the server detects file changes.",
   "version": "0.3.3",
   "repository": {
     "type": "git",
