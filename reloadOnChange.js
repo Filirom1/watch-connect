@@ -38,20 +38,16 @@ module.exports = function(options){
     if(!fs.statSync(dir)) return console.error('[watch-connect]', 'Unable to watch ' + dir, err.message);
   });
 
-  var exclude = [".git", "node_modules", ".hg"];
+  var exclude = ["\\/\\.","node_modules"];
   if (options.exclude) {
     exclude = exclude.concat(options.exclude);
   }
 
-  var watcher = watchTree.watch(dirsToWatch, {persistent: true});
-  watcher.on('all', function(type, itemPath) {
-    ignore = exclude.some(function(ele){
-      return itemPath.indexOf(ele) >= 0
-    })
-    if (!ignore) {
-      emit(options);
-    }
-  })
+  var reg = new RegExp(exclude.join('|'));
+  var watcher = watchTree.watch(options.watchdir, {ignored:reg , persistent: true});
+  watcher.on('all', function() {
+    emit(options);
+  });
 
   // setup socketio
   var io = socketio.listen(options.server);
