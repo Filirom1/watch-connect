@@ -44,7 +44,7 @@ module.exports = function(options){
   }
 
   var reg = new RegExp(exclude.join('|'));
-  var watcher = watchTree.watch(options.watchdir, {ignored:reg , persistent: true});
+  var watcher = watchTree.watch(dirsToWatch, {ignored:reg , persistent: true});
   watcher.on('all', function() {
     emit(options);
   });
