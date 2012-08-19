@@ -48,6 +48,10 @@ module.exports = function(options){
   watcher.on('all', function() {
     emit(options);
   });
+  watcher.on('error', function(error) {
+    // Doing nothing at the moment, just need to trap error event
+    //console.log("ERROR: ", error)
+  });
 
   // setup socketio
   var io = socketio.listen(options.server);
